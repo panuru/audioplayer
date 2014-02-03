@@ -7,32 +7,65 @@
   <script type="text/javascript" src="vendor/jquery-1.11.0.min.js"></script>
   <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="vendor/underscore-min.js"></script>
+  <script type="text/javascript" src="vendor/date.min.js"></script>
   <script type="text/javascript" src="vendor/knockout-3.0.0.js"></script>
   <script type="text/javascript" src="js/player.js"></script>
 </head>
 <body>
   <h1>A very awesome player</h1>
-  <audio id="player" data-bind="attr: { src: nowPlaying().file }"></audio>
+  <audio id="player" autobuffer preload=”metadata” data-bind="attr: { src: nowPlaying().file }"></audio>
   <div class="player-container">
-    <h2>Playlist:</h2>
-    <!-- ko if: isPlaying -->
-    <button data-bind="click: pause">pause</button>
-    <!-- /ko -->
-    <!-- ko ifnot: isPlaying -->
-    <button data-bind="click: play">play</button>
-    <!-- /ko -->
-    <ul data-bind="foreach: playlist">
-      <li data-bind="text: file, click: play"></li>
-    </ul>
+    <h3>Now playing:</h3>
+    <p>
+      <span class="artist" data-bind="text: nowPlaying().artist"></span> - <span class="title" data-bind="text: nowPlaying().title"></span>
+      <span class="time" data-bind="text: currentTimeFormatted()"></span> / <span class="time" data-bind="text: durationFormatted()"></span>
+    </p>
+      <p class="buttons">
+      <button data-bind="event: { mousedown: seekBack, mouseup: stopSeeking }">&lt;&lt;</button>
+      <!-- ko if: isPlaying -->
+      <button data-bind="click: pause">pause</button>
+      <!-- /ko -->
+      <!-- ko ifnot: isPlaying -->
+      <button data-bind="click: play">play</button>
+      <!-- /ko -->
+      <button data-bind="event: { mousedown: seekForward, mouseup: stopSeeking }">&gt;&gt;</button>
+    </p>
+    <h3>Playlist:</h3>
+    <ol data-bind="foreach: playlist">
+      <li data-bind="click: play">
+        <span class="artist" data-bind="text: artist"></span> - <span class="title" data-bind="text: title"></span>
+      </li>
+    </ol>
   </div>
   <script type="text/javascript">
-    var model = [];
-    for(var i = 1; i <= 4; i++) {
-      model.push({file: 'media/' + i + '.mp3'});
-    }
+    /// This should be pulled from server
+    var data = [
+      {
+        artist: 'Xmal Deutschland',
+        album: 'Incubus Succubus',
+        title: 'Zu Jung Zu Alt',
+        genre: 'Gothic Rock',
+        file: 'media/1.mp3'
+      },
+      {
+        artist: 'Kas Product',
+        album: 'Try out',
+        title: 'Never Come Back',
+        genre: 'Cold Wave',
+        file: 'media/2.mp3'
+      },
+      {
+        artist: 'The Bitch Boys',
+        album: 'Demo',
+        title: 'Batman Theme',
+        genre: 'Surf',
+        file: 'media/3.mp3'
+      }
+    ];
+
     $(function(){
       player.init({
-        playlist: model,
+        playlist: data,
         audio: document.getElementById('player')
       });
     });
