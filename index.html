@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/player.css">
+  <script type="text/javascript" src="vendor/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="vendor/underscore-min.js"></script>
+  <script type="text/javascript" src="vendor/knockout-3.0.0.js"></script>
+  <script type="text/javascript" src="js/player.js"></script>
+</head>
+<body>
+  <h1>A very awesome player</h1>
+  <audio id="player" data-bind="attr: { src: nowPlaying().file }"></audio>
+  <div class="player-container">
+    <h2>Playlist:</h2>
+    <!-- ko if: isPlaying -->
+    <button data-bind="click: pause">pause</button>
+    <!-- /ko -->
+    <!-- ko ifnot: isPlaying -->
+    <button data-bind="click: play">play</button>
+    <!-- /ko -->
+    <ul data-bind="foreach: playlist">
+      <li data-bind="text: file, click: play"></li>
+    </ul>
+  </div>
+  <script type="text/javascript">
+    var model = [];
+    for(var i = 1; i <= 4; i++) {
+      model.push({file: 'media/' + i + '.mp3'});
+    }
+    $(function(){
+      player.init({
+        playlist: model,
+        audio: document.getElementById('player')
+      });
+    });
+  </script>
+</body>
+
