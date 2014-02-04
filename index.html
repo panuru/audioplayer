@@ -5,7 +5,6 @@
   <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/player.css">
   <script type="text/javascript" src="vendor/jquery-1.11.0.min.js"></script>
-  <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="vendor/underscore-min.js"></script>
   <script type="text/javascript" src="vendor/date.min.js"></script>
   <script type="text/javascript" src="vendor/knockout-3.0.0.js"></script>
@@ -21,7 +20,7 @@
       <span class="time" data-bind="text: currentTimeFormatted()"></span> / <span class="time" data-bind="text: durationFormatted()"></span>
     </p>
     <p>
-      <input type="range" style="width:400px;" data-bind="event: { change: seekTo }, value: currentPercent">
+      <input type="range" style="width:400px;" data-bind="event: { change: seekToPercent }, value: currentTimePercent">
     </p>
     <p class="buttons">
       <button data-bind="event: { mousedown: seekBack, mouseup: stopSeeking }">&lt;&lt;</button>
@@ -32,6 +31,7 @@
       <button data-bind="click: play">play</button>
       <!-- /ko -->
       <button data-bind="event: { mousedown: seekForward, mouseup: stopSeeking }">&gt;&gt;</button>
+      <input type="range" style="width:200px;display:inline;" data-bind="event: { change: setVolumePercent }, value: volumePercent">
       <!-- ko ifnot: isMuted -->
       <button data-bind="click: mute">mute</button>
       <!-- /ko -->

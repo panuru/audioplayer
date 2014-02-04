@@ -14,20 +14,31 @@
     this.playlist = ko.observableArray(
       _.map(options.playlist, function(item){ return new Song(item); })
     );
+
+    this.nowPlaying = ko.observable();
     
     this.isPlaying = ko.observable(false);
     this.isSeeking = ko.observable(false);
     this.isMuted = ko.observable(false);
-    this.nowPlaying = ko.observable();
+    this.volume = ko.observable(audio.volume);
     this.currentTime = ko.observable(0);
-    this.duration = ko.observable('-')
+    this.duration = ko.observable('-');
+
+    this.remaining = ko.computed(function(){
+      this.duration() - this.currentTime();
+    }.bind(this));
+
+    this.currentTimePercent = ko.computed(function(){
+      return 100 * this.currentTime() / this.duration();
+    }.bind(this));
+    
+    this.volumePercent = ko.computed(function(){
+      return this.volume() * 100;
+    }.bind(this));
 
     this.currentTimeFormatted = formattedTime(this.currentTime);
     this.durationFormatted = formattedTime(this.duration);
-
-    this.currentPercent = ko.computed(function(){
-      return 100 * this.currentTime() / this.duration();
-    }.bind(this));
+    this.remainingFormatted = formattedTime(this.remaining);
 
     audio.addEventListener('loadedmetadata', function() {
       this.duration(audio.duration);
@@ -36,6 +47,11 @@
 
     audio.addEventListener('timeupdate', function() {
       this.currentTime(audio.currentTime);
+    }.bind(this));
+
+    audio.addEventListener('volumechange', function() {
+      console.log('volumechange', audio.volume)
+      this.volume(audio.volume);
     }.bind(this));
 
     // load the first track
@@ -52,16 +68,20 @@
       this.isPlaying(false);
     },
     mute: function () {
-      audio.muted = true;
+      this._audio.muted = true;
       this.isMuted(true);
     },
     unmute: function() {
-      audio.muted = false;
+      this._audio.muted = false;
       this.isMuted(false);
     },
-    seekTo: function(context, event) {
+    setVolumePercent: function(context, event) {
       var percent = event.target.value;
-      this.currentTime(percent * this.duration() / 100);
+      this._audio.volume = percent / 100;
+    },
+    seekToPercent: function(context, event) {
+      var percent = event.target.value;
+      this._audio.currentTime = percent * this.duration() / 100;
     },
     seekForward: function() {
       this.isSeeking(true);
