@@ -1,3 +1,96 @@
-.player {
-  
+.player-container {
+  font-family: 'Lucida Grande';
+  color: #444;
+  font-size: 0;
+  width: 600px;
+  margin: 30px;
+}
+input[type=range] {
+  -webkit-appearance: none;
+  background-color: #888;
+  height:8px;
+  margin: 2px 0;
+  display: inline-block;
+}
+input[type="range"]::-webkit-slider-thumb {
+   -webkit-appearance: none;
+  background-color: #fff;
+  border: solid 1px #888;
+  width: 6px;
+  height: 14px;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  cursor: pointer;
+}
+/* layout */
+.player-body {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 8px;
+}
+.player-body, .playlist {
+  border: solid 1px #888;
+  border-radius: 5px;
+}
+.player-controls, .now-playing {
+  display: inline-block;
+}
+.now-playing {
+  width: 450px;
+}
+.player-controls {
+  width: 300px;
+}
+/* controls */
+.player-controls .btn, .player-controls .range {
+  margin: 2px;
+}
+.player-controls .btn {
+  border: none;
+}
+.player-controls .range-volume {
+  width: 120px;
+}
+/* now playing */
+.now-playing span {
+  font-size: 10px;
+}
+.now-playing-title span {
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(150, 150, 148, 1);
+}
+.now-playing-time {
+  white-space: nowrap;
+}
+.now-playing-time > .range-time {
+  margin: 4px 3px;
+  width: 380px;
+}
+/* playlist */
+.playlist {
+  display: block;
+  width: 100%;
+  font-size: 12px;
+  margin: 10px 0;
+  padding: 6px 4px 12px;
+}
+.playlist-grid {
+  width: 100%;
+}/*
+.playlist-grid, .playlist-grid tr {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box; 
+}*/
+.playlist-grid th {
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(150, 150, 148, 1);
+}
+.playlist-grid tr.playlist-track:hover {
+  cursor: pointer;
+  background-color: #ccc;
+}
+.playlist-grid td.playlist-track-number, .playlist-grid th.playlist-track-number {
+  padding: 0 5px 0 15px;
 }

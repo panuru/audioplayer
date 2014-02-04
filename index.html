@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>HTML5 audio player</title>
   <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/player.css">
@@ -11,41 +12,72 @@
   <script type="text/javascript" src="js/player.js"></script>
 </head>
 <body>
-  <h1>A very awesome player</h1>
   <audio id="player" autobuffer preload=”metadata” data-bind="attr: { src: nowPlaying().file }"></audio>
-  <div class="player-container">
-    <h3>Now playing:</h3>
-    <p>
-      <span class="artist" data-bind="text: nowPlaying().artist"></span> - <span class="title" data-bind="text: nowPlaying().title"></span>
-      <span class="time" data-bind="text: currentTimeFormatted()"></span> / <span class="time" data-bind="text: durationFormatted()"></span>
-    </p>
-    <p>
-      <input type="range" style="width:400px;" data-bind="event: { change: seekToPercent }, value: currentTimePercent">
-    </p>
-    <p class="buttons">
-      <button data-bind="event: { mousedown: seekBack, mouseup: stopSeeking }">&lt;&lt;</button>
-      <!-- ko if: isPlaying -->
-      <button data-bind="click: pause">pause</button>
-      <!-- /ko -->
-      <!-- ko ifnot: isPlaying -->
-      <button data-bind="click: play">play</button>
-      <!-- /ko -->
-      <button data-bind="event: { mousedown: seekForward, mouseup: stopSeeking }">&gt;&gt;</button>
-      <input type="range" style="width:200px;display:inline;" data-bind="event: { change: setVolumePercent }, value: volumePercent">
-      <!-- ko ifnot: isMuted -->
-      <button data-bind="click: mute">mute</button>
-      <!-- /ko -->
-      <!-- ko if: isMuted -->
-      <button data-bind="click: unmute">unmute</button>
-      <!-- /ko -->
-    </p>
-    <h3>Playlist:</h3>
-    <ol data-bind="foreach: playlist">
-      <li data-bind="click: play">
-        <span class="artist" data-bind="text: artist"></span> - <span class="title" data-bind="text: title"></span>
-        <span class="time" data-bind="text: durationFormatted()"></span>
-      </li>
-    </ol>
+  <div class="player-container"> 
+    <div class="player-body">
+      <div class="now-playing">
+        <p class="now-playing-title">
+          <span data-bind="text: nowPlaying().title"></span>
+        </p>
+        <p class="now-playing-artist-album">
+          <span data-bind="text: nowPlaying().artist"></span><span> &ndash; </span><span data-bind="text: nowPlaying().album"></span>
+        </p>
+        <p class="now-playing-time">
+          <span class="time" data-bind="text: currentTimeFormatted()"></span>
+          <input type="range" class="range range-time" data-bind="event: { change: seekToPercent }, value: currentTimePercent">
+          <span class="time" data-bind="text: remainingFormatted()"></span>
+        </p>
+      </div>
+      <div class="player-controls">
+        <button class="btn-prev btn btn-default btn-xs" title="next track" data-bind="event: { mousedown: seekBack, mouseup: stopSeeking }">
+          <span class="glyphicon glyphicon-backward"></span>
+        </button>
+        <!-- ko ifnot: isPlaying -->
+        <button class="btn-play btn btn-default btn-lg" title="play" data-bind="click: play">
+          <span class="glyphicon glyphicon-play"></span>
+        </button>
+        <!-- /ko -->
+        <!-- ko if: isPlaying -->
+        <button class="btn-pause btn btn-default btn-lg" title="pause" data-bind="click: pause">
+          <span class="glyphicon glyphicon-pause"></span>
+        </button>
+        <!-- /ko -->
+        <button class="btn-next btn btn-default btn-xs" title="next track" data-bind="event: { mousedown: seekForward, mouseup: stopSeeking }">
+          <span class="glyphicon glyphicon-forward"></span>
+        </button>
+        <input type="range" class="range range-volume" data-bind="event: { change: setVolumePercent }, value: volumePercent">
+        <!-- ko ifnot: isMuted -->
+        <button class="btn-mute btn btn-default btn-xs" title="mute" data-bind="click: mute">
+          <span class="glyphicon glyphicon-volume-up"></span>
+        </button>
+        <!-- /ko -->
+        <!-- ko if: isMuted -->
+        <button class="btn-unmute btn btn-default btn-xs" title="unmute" data-bind="click: unmute">
+          <span class="glyphicon glyphicon-volume-off"></span>
+        </button>
+        <!-- /ko -->
+      </div>
+    </div>
+    <div class="playlist">
+      <table class="playlist-grid">
+        <tr>
+          <th class="playlist-track-number"></th>
+          <th class="playlist-title">Title</th>
+          <th class="playlist-artist">Artist</th>
+          <th class="playlist-album">Album</th>
+          <th class="playlist-duration"></th>
+        </tr>
+        <!-- ko foreach: playlist -->
+        <tr class="playlist-track" data-bind="click: play">
+          <td class="playlist-track-number" data-bind="text: $index() + 1"></td>
+          <td class="playlist-title" data-bind="text: title"></td>
+          <td class="playlist-artist" data-bind="text: artist"></td>
+          <td class="playlist-album" data-bind="text: album"></td>
+          <td class="playlist-duration" data-bind="text: durationFormatted"></td>
+        </tr>
+        <!-- /ko -->
+      </table>
+    </div>
   </div>
   <script type="text/javascript">
     /// This should be pulled from server

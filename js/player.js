@@ -1,10 +1,12 @@
 (function() {
   var player = window.player = {};
 
-  function formattedTime(observable) {
+  function formattedTime(observable, prefix) {
     return ko.computed(function(){
       var value = observable();
-      return isNaN(value) ? '--:--' : new Date(value * 1000).toString("m:ss");
+      var formatted = isNaN(value) ? '--:--' : new Date(value * 1000).toString("m:ss");
+      if(prefix) { formatted = prefix + formatted };
+      return formatted;
     });
   }
 
@@ -25,7 +27,7 @@
     this.duration = ko.observable('-');
 
     this.remaining = ko.computed(function(){
-      this.duration() - this.currentTime();
+      return this.duration() - this.currentTime();
     }.bind(this));
 
     this.currentTimePercent = ko.computed(function(){
@@ -38,7 +40,7 @@
 
     this.currentTimeFormatted = formattedTime(this.currentTime);
     this.durationFormatted = formattedTime(this.duration);
-    this.remainingFormatted = formattedTime(this.remaining);
+    this.remainingFormatted = formattedTime(this.remaining, '-');
 
     audio.addEventListener('loadedmetadata', function() {
       this.duration(audio.duration);
