@@ -20,7 +20,10 @@
       <span class="artist" data-bind="text: nowPlaying().artist"></span> - <span class="title" data-bind="text: nowPlaying().title"></span>
       <span class="time" data-bind="text: currentTimeFormatted()"></span> / <span class="time" data-bind="text: durationFormatted()"></span>
     </p>
-      <p class="buttons">
+    <p>
+      <input type="range" style="width:400px;" data-bind="event: { change: seekTo }, value: currentPercent">
+    </p>
+    <p class="buttons">
       <button data-bind="event: { mousedown: seekBack, mouseup: stopSeeking }">&lt;&lt;</button>
       <!-- ko if: isPlaying -->
       <button data-bind="click: pause">pause</button>
@@ -29,11 +32,18 @@
       <button data-bind="click: play">play</button>
       <!-- /ko -->
       <button data-bind="event: { mousedown: seekForward, mouseup: stopSeeking }">&gt;&gt;</button>
+      <!-- ko ifnot: isMuted -->
+      <button data-bind="click: mute">mute</button>
+      <!-- /ko -->
+      <!-- ko if: isMuted -->
+      <button data-bind="click: unmute">unmute</button>
+      <!-- /ko -->
     </p>
     <h3>Playlist:</h3>
     <ol data-bind="foreach: playlist">
       <li data-bind="click: play">
         <span class="artist" data-bind="text: artist"></span> - <span class="title" data-bind="text: title"></span>
+        <span class="time" data-bind="text: durationFormatted()"></span>
       </li>
     </ol>
   </div>

@@ -1,40 +1,44 @@
 (function() {
   var player = window.player = {};
 
+  function formattedTime(observable) {
+    return ko.computed(function(){
+      var value = observable();
+      return isNaN(value) ? '--:--' : new Date(value * 1000).toString("m:ss");
+    });
+  }
+
   var Player = function(options) {
-    this._audio = options.audio;
+    var audio = this._audio = options.audio;
     
     this.playlist = ko.observableArray(
-      _.map(options.playlist, function(item){ return new Song(item, this); })
+      _.map(options.playlist, function(item){ return new Song(item); })
     );
     
     this.isPlaying = ko.observable(false);
     this.isSeeking = ko.observable(false);
-    
+    this.isMuted = ko.observable(false);
     this.nowPlaying = ko.observable();
-
     this.currentTime = ko.observable(0);
-    this.duration = ko.observable(0)
+    this.duration = ko.observable('-')
 
-    function formatDate(sec) {
-      return new Date(sec * 1000).toString("m:ss");
-    }
+    this.currentTimeFormatted = formattedTime(this.currentTime);
+    this.durationFormatted = formattedTime(this.duration);
 
-    this.currentTimeFormatted = ko.computed(function(){
-      return formatDate(this.currentTime());
+    this.currentPercent = ko.computed(function(){
+      return 100 * this.currentTime() / this.duration();
     }.bind(this));
 
-    this.durationFormatted = ko.computed(function(){
-      return formatDate(this.duration());
+    audio.addEventListener('loadedmetadata', function() {
+      this.duration(audio.duration);
+      this.nowPlaying().duration(audio.duration);
     }.bind(this));
 
-    _.bindAll(this, '_tick', '_updateMeta');
+    audio.addEventListener('timeupdate', function() {
+      this.currentTime(audio.currentTime);
+    }.bind(this));
 
-    this.isPlaying.subscribe(this._tick);
-    this.isSeeking.subscribe(this._tick);
-
-    this._audio.addEventListener('loadedmetadata', this._updateMeta);
-
+    // load the first track
     this.nowPlaying(this.playlist()[0]);
   }
 
@@ -42,47 +46,49 @@
     play: function() {
       this._audio.play();
       this.isPlaying(true);
-      
     },
     pause: function() {
       this._audio.pause()
       this.isPlaying(false);
-      clearInterval(this._interval);
+    },
+    mute: function () {
+      audio.muted = true;
+      this.isMuted(true);
+    },
+    unmute: function() {
+      audio.muted = false;
+      this.isMuted(false);
+    },
+    seekTo: function(context, event) {
+      var percent = event.target.value;
+      this.currentTime(percent * this.duration() / 100);
     },
     seekForward: function() {
       this.isSeeking(true);
       this._seekInterval = setInterval(function(){
-        this._audio.currentTime++;
-      }.bind(this))
+        this._audio.currentTime = Math.min(this._audio.currentTime + 0.4, this._audio.duration);
+      }.bind(this), 25);
     },
     seekBack: function() {
       this.isSeeking(true);
       this._seekInterval = setInterval(function(){
-        this._audio.currentTime--;
-      }.bind(this))
+        this._audio.currentTime = Math.max(this._audio.currentTime - 0.4, 0);
+      }.bind(this), 25);
     },
     stopSeeking: function(){
       this.isSeeking(false);
       clearInterval(this._seekInterval);
-    },
-    _tick: function(value){
-      if (value) {
-        this._tickInterval = setInterval(function(){
-          this.currentTime(this._audio.currentTime);
-        }.bind(this), 50);
-      } else {
-        clearInterval(this._tickInterval);
-      }
-    },
-    _updateMeta: function() {
-      this.duration(this._audio.duration);
-      console.log(this.duration());
     }
   }
 
   var Song = function(model) {
     _.extend(this, model);
-    this.play = function() {
+    this.duration = ko.observable('-');
+    this.durationFormatted = formattedTime(this.duration);
+  }
+
+  Song.prototype = {
+    play: function() {
       player.instance.nowPlaying(this);
       player.instance.play();
     }
