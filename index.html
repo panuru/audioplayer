@@ -37,13 +37,19 @@
           <span data-bind="text: nowPlaying().artist"></span><span> &ndash; </span><span data-bind="text: nowPlaying().album"></span>
         </p>
         <p class="now-playing-time">
+          <button class="btn-seek-backward btn btn-default btn-xs" title="seek backward" data-bind="event: { mousedown: seekBack, mouseup: stopSeeking }">
+            <span class="glyphicon glyphicon-fast-backward"></span>
+          </button>
           <span class="time" data-bind="text: currentTimeFormatted()"></span>
           <input type="range" class="range range-time" data-bind="event: { change: seekToPercent }, value: currentTimePercent">
           <span class="time" data-bind="text: remainingFormatted()"></span>
+          <button class="btn-seek-forward btn btn-default btn-xs" title="seek forward" data-bind="event: { mousedown: seekForward, mouseup: stopSeeking }">
+            <span class="glyphicon glyphicon-fast-forward"></span>
+          </button>
         </p>
       </div>
       <div class="player-controls">
-        <button class="btn-prev btn btn-default btn-xs" title="next track" data-bind="event: { mousedown: seekBack, mouseup: stopSeeking }">
+        <button class="btn-prev btn btn-default btn-xs" title="prev track" data-bind="click: prevTrack">
           <span class="glyphicon glyphicon-backward"></span>
         </button>
         <!-- ko ifnot: isPlaying -->
@@ -56,7 +62,7 @@
           <span class="glyphicon glyphicon-pause"></span>
         </button>
         <!-- /ko -->
-        <button class="btn-next btn btn-default btn-xs" title="next track" data-bind="event: { mousedown: seekForward, mouseup: stopSeeking }">
+        <button class="btn-next btn btn-default btn-xs" title="next track" data-bind="click: nextTrack">
           <span class="glyphicon glyphicon-forward"></span>
         </button>
         <input type="range" class="range range-volume" data-bind="event: { change: setVolumePercent }, value: volumePercent">
@@ -93,7 +99,6 @@
       </table>
     </div>
   </div>
-  <button id="foo"></button>
   <script type="text/javascript">
     /// This should be pulled from server
     var data = [
@@ -131,12 +136,9 @@
         playlist: data,
         audio: document.getElementById('audio-player')
       });
-      player.onLoadError(function(){
+      player.onLoadMediaError(function(){
         $('#modal-error').modal();
       });
-      $('#foo').on('click', function(){
-        throw new PlayerError('uh oh');
-      })
     });
   </script>
 </body>

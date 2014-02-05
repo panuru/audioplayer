@@ -1,26 +1,15 @@
 @font-face{
   font-family: "Lucida Grande";
   font-weight:normal;
-  src: url('../fonts/lucida_grande-webfont.eot');
+  src: url('../fonts/Lucida-Grande.eot');
   src: local('Lucida Grande Regular'), /* name of local font file */
   local('LucidaGrande-Regular'), /* file name of local font */
-  url('../fonts/lucida_grande-webfont.eot?#iefix') format('embedded-opentype'),
-  url('../fonts/lucida_grande-webfont.woff') format('woff'),
-  url('../fonts/lucida_grande-webfont.ttf') format('truetype'),
-  url('../fonts/lucida_grande-webfont.svg#webfont') format('svg');
+  url('../fonts/Lucida-Grande.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/Lucida-Grande.woff') format('woff'),
+  url('../fonts/Lucida-Grande.ttf') format('truetype'),
+  url('../fonts/Lucida-Grande.svg#webfont') format('svg');
 }
 
-@font-face{
-  font-family: "Lucida Grande";
-  font-weight: bold;
-  src: url('../fonts/lucida_grande_bold-webfont.eot');
-  src: local('Lucida Grande Bold'),
-  local('LucidaGrande-Bold'),
-  url('../fonts/lucida_grande_bold-webfont.eot?#iefix') format('embedded-opentype'),
-  url('../fonts/lucida_grande_bold-webfont.woff') format('woff'),
-  url('../fonts/lucida_grande_bold-webfont.ttf') format('truetype'),
-  url('../fonts/lucida_grande_bold-webfont.svg#webfont') format('svg');
-}
 .player-container {
   font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;
   color: #444;
@@ -69,7 +58,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .player-controls .btn, .player-controls .range {
   margin: 2px;
 }
-.player-controls .btn {
+.player-body .btn {
   border: none;
 }
 .player-controls .range-volume {
@@ -90,6 +79,9 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .now-playing-time > .range-time {
   margin: 4px 3px;
   width: 380px;
+}
+.btn-seek-forward, .btn-seek-backward {
+  margin-top: -9px;
 }
 /* playlist */
 .playlist {
