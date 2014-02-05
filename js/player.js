@@ -43,17 +43,20 @@
     this.remainingFormatted = formattedTime(this.remaining, '-');
 
     audio.addEventListener('loadedmetadata', function() {
-      this.duration(audio.duration);
-      this.nowPlaying().duration(audio.duration);
+      this.duration(this._audio.duration);
+      this.nowPlaying().duration(this._audio.duration);
     }.bind(this));
 
     audio.addEventListener('timeupdate', function() {
-      this.currentTime(audio.currentTime);
+      this.currentTime(this._audio.currentTime);
     }.bind(this));
 
     audio.addEventListener('volumechange', function() {
-      console.log('volumechange', audio.volume)
-      this.volume(audio.volume);
+      this.volume(this._audio.volume);
+    }.bind(this));
+
+    audio.addEventListener('error', function() {
+      throw new PlayerLoadError();
     }.bind(this));
 
     // load the first track
@@ -83,7 +86,7 @@
     },
     seekToPercent: function(context, event) {
       var percent = event.target.value;
-      this._audio.currentTime = percent * this.duration() / 100;
+      this._audio.currentTime = percent * this._audio.duration / 100;
     },
     seekForward: function() {
       this.isSeeking(true);
@@ -105,6 +108,7 @@
 
   var Song = function(model) {
     _.extend(this, model);
+
     this.duration = ko.observable('-');
     this.durationFormatted = formattedTime(this.duration);
   }
@@ -116,8 +120,25 @@
     }
   }
 
-  player.init = function(options) {
-    player.instance = new Player(options)
-    ko.applyBindings(player.instance);
+  var PlayerLoadError = function (message) {
+    this.name = "Player error";
+    this.message = message || '';
   }
+
+  PlayerLoadError.prototype = new Error();
+
+  player.init = function(options) {
+    player.instance = new Player(options);
+    ko.applyBindings(player.instance);
+  };
+
+  var errorCallbacks = $.Callbacks();
+
+  player.onLoadError = errorCallbacks.add;
+
+  window.onerror = function() {
+    error = arguments[4];
+    if (error && error instanceof PlayerLoadError) errorCallbacks.fire();
+  };
+
 })();

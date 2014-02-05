@@ -1,5 +1,28 @@
+@font-face{
+  font-family: "Lucida Grande";
+  font-weight:normal;
+  src: url('../fonts/lucida_grande-webfont.eot');
+  src: local('Lucida Grande Regular'), /* name of local font file */
+  local('LucidaGrande-Regular'), /* file name of local font */
+  url('../fonts/lucida_grande-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/lucida_grande-webfont.woff') format('woff'),
+  url('../fonts/lucida_grande-webfont.ttf') format('truetype'),
+  url('../fonts/lucida_grande-webfont.svg#webfont') format('svg');
+}
+
+@font-face{
+  font-family: "Lucida Grande";
+  font-weight: bold;
+  src: url('../fonts/lucida_grande_bold-webfont.eot');
+  src: local('Lucida Grande Bold'),
+  local('LucidaGrande-Bold'),
+  url('../fonts/lucida_grande_bold-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/lucida_grande_bold-webfont.woff') format('woff'),
+  url('../fonts/lucida_grande_bold-webfont.ttf') format('truetype'),
+  url('../fonts/lucida_grande_bold-webfont.svg#webfont') format('svg');
+}
 .player-container {
-  font-family: 'Lucida Grande';
+  font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;
   color: #444;
   font-size: 0;
   width: 600px;

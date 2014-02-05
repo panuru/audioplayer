@@ -3,16 +3,30 @@
 <head>
   <title>HTML5 audio player</title>
   <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/player.css">
   <script type="text/javascript" src="vendor/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="vendor/underscore-min.js"></script>
   <script type="text/javascript" src="vendor/date.min.js"></script>
   <script type="text/javascript" src="vendor/knockout-3.0.0.js"></script>
   <script type="text/javascript" src="js/player.js"></script>
 </head>
 <body>
-  <audio id="player" autobuffer preload=”metadata” data-bind="attr: { src: nowPlaying().file }"></audio>
+  <audio id="audio-player" autobuffer preload=”metadata” data-bind="attr: { src: nowPlaying().file }"></audio>
+  
+  <div id="modal-error" class="modal fade bs-modal-sm">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content" data-dismiss="modal">
+        <div class="modal-header">
+          <h4 class="modal-title">Error</h4>
+        </div>
+        <div class="modal-body">
+          Could not load audio file.
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="player-container"> 
     <div class="player-body">
       <div class="now-playing">
@@ -79,6 +93,7 @@
       </table>
     </div>
   </div>
+  <button id="foo"></button>
   <script type="text/javascript">
     /// This should be pulled from server
     var data = [
@@ -102,14 +117,26 @@
         title: 'Batman Theme',
         genre: 'Surf',
         file: 'media/3.mp3'
+      },
+      {
+        artist: 'Rick Astley',
+        album: '',
+        title: 'Never Gonna Give You Up',
+        file: 'media/4.mp3'
       }
     ];
 
     $(function(){
       player.init({
         playlist: data,
-        audio: document.getElementById('player')
+        audio: document.getElementById('audio-player')
       });
+      player.onLoadError(function(){
+        $('#modal-error').modal();
+      });
+      $('#foo').on('click', function(){
+        throw new PlayerError('uh oh');
+      })
     });
   </script>
 </body>
